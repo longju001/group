@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxinkeji.comm.group.mapper.WeChatUserMapper">
+    
+    <resultMap type="com.jinxinkeji.comm.group.model.entity.WechatUser" id="WeChatUserResult">
+        <result property="openId"    column="openId"    />
+        <result property="headImageUrl"    column="headImageUrl"    />
+        <result property="nickName"    column="nickName"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="sex"    column="sex"    />
+    </resultMap>
+
+    <insert id="addUser" parameterType="com.jinxinkeji.comm.group.model.entity.WechatUser">
+        insert into wechatuser
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openId != null">openId,</if>
+            <if test="headImageUrl != null">headImageUrl,</if>
+            <if test="nickName != null">nickName,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="sex != null">sex,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openId != null">#{openId},</if>
+            <if test="headImageUrl != null">#{headImageUrl},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="sex != null">#{sex},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="com.jinxinkeji.comm.group.model.entity.WechatUser">
+        update wechatuser
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="headImageUrl != null">headImageUrl = #{headImageUrl},</if>
+            <if test="nickName != null">nickName = #{nickName},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sex != null">sex = #{sex},</if>
+        </trim>
+        where openId = #{openId}
+    </update>
+
+    <select id="getCountByOpenId" resultType="java.lang.Integer" parameterType="string">
+        select count(1) from wechatuser where openId = #{openId}
+    </select>
+
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxinkeji.comm.group.mapper.MessageMapper">
+
+    <select id="selectPageVo" resultType="com.jinxinkeji.comm.group.model.vo.MessageListVo">
+        SELECT a.messageId, a.openId, b.headImageUrl,b.nickName, a.title, a.content, a.publishDate,a.themeCode,
+               a.isUp, a.isHigtQualityMart FROM circlemessage a left join wechatuser b on a.openId = b.openId
+        <where>
+            <if test="themeCode != null  and themeCode != ''"> and a.themeCode = #{themeCode}</if>
+        </where>
+        order by a.publishDate desc
+    </select>
+
+    <select id="getFilesByMessageIds" resultType="com.jinxinkeji.comm.group.model.entity.MessageFile" parameterType="list">
+        select * from messagefile where messageId in
+        <foreach item="messageId" collection="messageIdList" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </select>
+
+    <select id="getCommentsByMessageIds" resultType="com.jinxinkeji.comm.group.model.entity.MessageComment" parameterType="list">
+        select a.commentId, a.messageId, a.openId, b.headImageUrl, b.nickName, a.commentText, a.commentDate
+        from messagecomment a left join wechatuser b on a.openId = b.openId where a.messageId in
+        <foreach item="messageId" collection="messageIdList" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </select>
+
+    <select id="getThumbUpsByMessageIds" resultType="com.jinxinkeji.comm.group.model.entity.MessageThumbUp" parameterType="list">
+        select a.messageId, a.openId, b.headImageUrl, b.nickName, a.thumbUpDate
+        from messagethumbup a left join wechatuser b on a.openId = b.openId where a.messageId in
+        <foreach item="messageId" collection="messageIdList" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </select>
+
+    <insert id="publishMessage" parameterType="com.jinxinkeji.comm.group.model.vo.CircleMessageVo">
+        insert into circlemessage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            messageId,
+            <if test="openId != null">openId,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="themeCode != null">themeCode,</if>
+            isUp,
+            isHigtQualityMart,
+            publishDate
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            REPLACE(UUID(),"-",""),
+            <if test="openId != null">#{openId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="themeCode != null">#{themeCode},</if>
+            #{isUp},
+            #{isHigtQualityMart},
+            NOW()
+         </trim>
+    </insert>
+
+    <select id="messageDetail" resultType="com.jinxinkeji.comm.group.model.entity.CircleMessage">
+        select a.messageId, a.openId, b.headImageUrl, b.nickName, a.title, a.content, a.publishDate, a.themeCode, a.isUp, a.isHigtQualityMart
+        from circlemessage a left join wechatuser b on a.openId = b.openId where a.messageId = #{messageId}
+    </select>
+    <select id="messageDeteil" resultType="com.jinxinkeji.comm.group.model.entity.CircleMessage">
+
+    </select>
+
+
+
+
+    <insert id="batchAddFiles" parameterType="com.jinxinkeji.comm.group.model.vo.BatchFileVo">
+		insert into messagefile
+		(fileId,messageId,uploadDate)
+    	values
+		<foreach collection="fileIds" index="index" item="fileId" separator=",">
+		(
+			#{fileId},
+			#{messageId},
+		    NOW()
+		)
+		</foreach>
+	</insert>
+
+    <delete id="removeFilesByMessageId" parameterType="string">
+        delete from messagefile where messageId = #{messageId}
+    </delete>
+
+    <delete id="removeCommentsByMessageId" parameterType="string">
+        delete from messagecomment where messageId = #{messageId}
+    </delete>
+
+    <delete id="removeThumbUpsByMessageId" parameterType="string">
+        delete from messagethumbup where messageId = #{messageId}
+    </delete>
+
+    <delete id="removeMessageByMessageId" parameterType="string">
+        delete from circlemessage where messageId = #{messageId}
+    </delete>
+
+    <insert id="addThumbUp" parameterType="com.jinxinkeji.comm.group.model.vo.ThumbUpVo">
+        insert into messagethumbup (
+            messageId,openId,thumbUpDate
+        ) values (
+            #{messageId},#{openId},NOW()
+        )
+    </insert>
+
+    <delete id="removeThumbUp" parameterType="com.jinxinkeji.comm.group.model.vo.ThumbUpVo">
+        delete from messagethumbup where messageId = #{messageId} and openId = #{openId}
+    </delete>
+
+    <insert id="addComment" parameterType="com.jinxinkeji.comm.group.model.vo.MessageCommentVo">
+        insert into messagecomment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            commentId,
+            <if test="openId != null">openId,</if>
+            <if test="messageId != null">messageId,</if>
+            <if test="commentText != null">commentText,</if>
+            commentDate
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            REPLACE(UUID(),"-",""),
+            <if test="openId != null">#{openId},</if>
+            <if test="messageId != null">#{messageId},</if>
+            <if test="commentText != null">#{commentText},</if>
+            NOW()
+         </trim>
+    </insert>
+
+    <delete id="removeMessageComment" parameterType="string">
+        delete from messagecomment where commentId = #{commentId}
+    </delete>
+
+    <select id="allTheme" resultType="com.jinxinkeji.comm.group.model.entity.MessageTheme">
+        select themeCode,themeName,themeDesc,themeSort from messagetheme
+    </select>
+
+    <select id="heatFlowOfTheme" resultType="java.util.Map">
+        select themeCode,count(messageId) as heatFlow from circlemessage group by themeCode
+    </select>
+
+    <select id="selectPageComment" resultType="com.jinxinkeji.comm.group.model.entity.MessageComment">
+        select a.commentId, a.messageId, a.openId, b.headImageUrl, b.nickName, a.commentText, a.commentDate
+        from messagecomment a left join wechatuser b on a.openId = b.openId where a.messageId = #{messageId}
+        order by commentDate desc
+    </select>
+
+</mapper>
