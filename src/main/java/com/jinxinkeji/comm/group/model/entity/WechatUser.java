@@ -16,6 +16,9 @@ public class WechatUser {
     @ApiModelProperty(value = "小程序用户唯一标识")
     private String openId;
 
+    @ApiModelProperty(value = "用户在开放平台的唯一标识符")
+    private String unionid;
+
     @ApiModelProperty(value = "头像地址")
     private String headImageUrl;
 
@@ -79,10 +82,19 @@ public class WechatUser {
         this.phone = phone;
     }
 
+    public String getUnionid() {
+        return unionid;
+    }
+
+    public void setUnionid(String unionid) {
+        this.unionid = unionid;
+    }
+
     @Override
     public String toString() {
         return "WechatUser{" +
                 "openId='" + openId + '\'' +
+                ", unionid='" + unionid + '\'' +
                 ", headImageUrl='" + headImageUrl + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", name='" + name + '\'' +

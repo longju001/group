@@ -14,11 +14,11 @@ public class Result<T> {
     private String message;
     @ApiModelProperty(value = "接口成功与否：true，false")
     private String success;
-    @ApiModelProperty(value = "接口返回的主题内容")
+    @ApiModelProperty(value = "接口返回的主体内容")
     private T result;
 
-    private static final String STATUS_SUCCESS = "true";
-    private static final String STATUS_FAILED = "false";
+    public static final String STATUS_SUCCESS = "true";
+    public static final String STATUS_FAILED = "false";
 
     public Result(String message, String success, T result) {
         this.message = message;

@@ -10,5 +10,5 @@ import com.jinxinkeji.comm.group.model.entity.WechatUser;
 public interface IWeChatUserService {
 
 
-    Result<String> addUser(WechatUser wechatUser);
+    Result<String> addUser(WechatUser wechatUser) throws Exception;
 }

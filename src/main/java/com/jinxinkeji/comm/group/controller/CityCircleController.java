@@ -1,10 +1,8 @@
 package com.jinxinkeji.comm.group.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.jinxinkeji.comm.group.model.entity.CircleMessage;
-import com.jinxinkeji.comm.group.model.entity.MessageComment;
-import com.jinxinkeji.comm.group.model.entity.MessageTheme;
-import com.jinxinkeji.comm.group.model.entity.Result;
+import com.jinxinkeji.comm.group.config.UserThreadLocal;
+import com.jinxinkeji.comm.group.model.entity.*;
 import com.jinxinkeji.comm.group.model.vo.*;
 import com.jinxinkeji.comm.group.service.ICityCircleService;
 import io.swagger.annotations.Api;
@@ -33,15 +31,14 @@ public class CityCircleController {
     @PostMapping("/messageList.json")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "分页查询的页数", required = true, dataType = "long"),
-            @ApiImplicitParam(name = "themeCode", value = "话题编码", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "currentOpenId", value = "当前小程序登录用户openId", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "themeCode", value = "话题编码", required = true, dataType = "String")
     })
     @ApiOperation(value = "同城圈消息列表分页查询", notes = "同城圈消息列表分页查询")
     public Result<IPage<MessageListVo>> list(@RequestParam("pageNum") long pageNum,
-                                             @RequestParam("themeCode") String themeCode,
-                                             @RequestParam("currentOpenId") String currentOpenId){
+                                             @RequestParam("themeCode") String themeCode){
         try {
-            return cityCircleService.messageList(pageNum, themeCode, currentOpenId);
+            WechatUser user = UserThreadLocal.getUser();
+            return cityCircleService.messageList(pageNum, themeCode, user.getOpenId());
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failed("查询异常");
