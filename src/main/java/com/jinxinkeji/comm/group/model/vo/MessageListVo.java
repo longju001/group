@@ -38,7 +38,7 @@ public class MessageListVo {
     private int isUp;
     @ApiModelProperty(value = "是否优质商家")
     private int isHigtQualityMart;
-    @ApiModelProperty(value = "当前登录人是否点过赞")
+    @ApiModelProperty(value = "当前登录人是否点过赞 1:点赞，0:没点赞")
     private int isMyThumbUp;
 
     @ApiModelProperty(value = "消息文件列表")

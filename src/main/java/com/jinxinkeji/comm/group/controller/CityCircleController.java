@@ -74,7 +74,7 @@ public class CityCircleController {
         }
     }
 
-    @CrossOrigin
+    /*@CrossOrigin
     @PostMapping("/addFiles.json")
     @ApiImplicitParam(name = "BatchFileVo", value = "批量保存文件入参")
     @ApiOperation(value = "批量保存文件", notes = "批量保存文件")
@@ -85,7 +85,7 @@ public class CityCircleController {
             e.printStackTrace();
             return Result.failed("批量保存文件异常");
         }
-    }
+    }*/
 
     @CrossOrigin
     @PostMapping("/removeMessage.json")

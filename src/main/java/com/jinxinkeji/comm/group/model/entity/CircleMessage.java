@@ -35,6 +35,8 @@ public class CircleMessage {
     private int isUp;
     @ApiModelProperty(value = "是否优质商家")
     private int isHigtQualityMart;
+    @ApiModelProperty(value = "当前登录人是否点过赞 1:点赞，0:没点赞")
+    private int isMyThumbUp;
 
     @ApiModelProperty(value = "同城圈消息文件列表")
     private List<MessageFile> fileList;
@@ -145,5 +147,13 @@ public class CircleMessage {
 
     public void setIsHigtQualityMart(int isHigtQualityMart) {
         this.isHigtQualityMart = isHigtQualityMart;
+    }
+
+    public int getIsMyThumbUp() {
+        return isMyThumbUp;
+    }
+
+    public void setIsMyThumbUp(int isMyThumbUp) {
+        this.isMyThumbUp = isMyThumbUp;
     }
 }

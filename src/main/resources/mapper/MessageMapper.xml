@@ -20,6 +20,22 @@
         </foreach>
     </select>
 
+    <select id="getCommentCounts" resultType="java.util.Map" parameterType="list">
+        select messageId, COUNT(1) as commentCount from messagecomment GROUP BY messageId HAVING messageId in
+        <foreach item="messageId" collection="messageIdList" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </select>
+
+    <select id="getThumbUpCounts" resultType="java.util.Map" parameterType="list">
+        select messageId, COUNT(1) as thumbupCount from messagethumbup
+        <if test="currentOpenId != null"> where openId = #{currentOpenId} </if>
+        GROUP BY messageId HAVING messageId in
+        <foreach item="messageId" collection="messageIdList" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </select>
+
     <select id="getCommentsByMessageIds" resultType="com.jinxinkeji.comm.group.model.entity.MessageComment" parameterType="list">
         select a.commentId, a.messageId, a.openId, b.headImageUrl, b.nickName, a.commentText, a.commentDate
         from messagecomment a left join wechatuser b on a.openId = b.openId where a.messageId in
@@ -39,7 +55,7 @@
     <insert id="publishMessage" parameterType="com.jinxinkeji.comm.group.model.vo.CircleMessageVo">
         insert into circlemessage
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            messageId,
+            <if test="messageId != null">messageId,</if>
             <if test="openId != null">openId,</if>
             <if test="title != null">title,</if>
             <if test="content != null">content,</if>
@@ -49,7 +65,7 @@
             publishDate
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            REPLACE(UUID(),"-",""),
+            <if test="messageId != null">#{messageId},</if>
             <if test="openId != null">#{openId},</if>
             <if test="title != null">#{title},</if>
             <if test="content != null">#{content},</if>

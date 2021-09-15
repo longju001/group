@@ -21,6 +21,10 @@ public interface MessageMapper {
 
     List<MessageFile> getFilesByMessageIds(List<String> messageIdList);
 
+    List<Map<String, String>> getCommentCounts(List<String> messageIdList);
+
+    List<Map<String, String>> getThumbUpCounts(List<String> messageIdList, String currentOpenId);
+
     List<MessageComment> getCommentsByMessageIds(List<String> messageIdList);
 
     List<MessageThumbUp> getThumbUpsByMessageIds(List<String> messageIdList);
@@ -52,5 +56,4 @@ public interface MessageMapper {
     IPage<MessageComment> selectPageComment(Page<MessageComment> p, String messageId);
 
     List<CircleMessage> messageDetail(String messageId);
-
 }

@@ -1,7 +1,10 @@
 package com.jinxinkeji.comm.group.model.vo;
 
+import com.jinxinkeji.comm.group.model.entity.MessageFile;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 
 /**
  * @author changyl
@@ -9,6 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel
 public class CircleMessageVo {
+    @ApiModelProperty(value = "同城消息的ID,后端生成，前端不用填")
+    private String messageId;
     @ApiModelProperty(value = "发布消息的用户openId")
     private String openId;
     @ApiModelProperty(value = "发布消息的主题")
@@ -22,6 +27,9 @@ public class CircleMessageVo {
     private int isUp;
     @ApiModelProperty(value = "是否优质商家 默认0：不是，1：是")
     private int isHigtQualityMart;
+
+    @ApiModelProperty(value = "消息文件表示的列表")
+    private List<String> fileIds;
 
     public String getOpenId() {
         return openId;
@@ -69,5 +77,21 @@ public class CircleMessageVo {
 
     public void setThemeCode(String themeCode) {
         this.themeCode = themeCode;
+    }
+
+    public List<String> getFileIds() {
+        return fileIds;
+    }
+
+    public void setFileIds(List<String> fileIds) {
+        this.fileIds = fileIds;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

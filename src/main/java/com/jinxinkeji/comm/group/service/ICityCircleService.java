@@ -19,7 +19,7 @@ public interface ICityCircleService {
 
     Result<String> publishMessage(CircleMessageVo vo);
 
-    Result<String> addFiles(BatchFileVo vo);
+    //Result<String> addFiles(BatchFileVo vo);
 
     Result<String> removeMessage(String messageId);
 
