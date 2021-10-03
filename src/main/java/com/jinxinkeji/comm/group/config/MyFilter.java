@@ -59,14 +59,16 @@ public class MyFilter implements Filter {
                 resultInfo = Result.failed("用户授权认证没有通过!客户端请求参数中无token信息");
             } else {
                 if (volidateToken(token)) {
-                    resultInfo = Result.failed("用户授权认证通过");
+                    resultInfo = Result.success("用户授权认证通过", null);
                     isFilter = true;
                 } else {
                     resultInfo = Result.failed("用户授权认证没有通过!请登录");
                 }
             }
+            System.out.println(Result.STATUS_FAILED);
+            System.out.println(resultInfo.getSuccess());
             // 验证失败
-            if (Result.STATUS_FAILED.equals(resultInfo.getSuccess())) {
+            if (Result.STATUS_FAILED.equals(resultInfo.getMessage())) {
                 PrintWriter writer = null;
                 OutputStreamWriter osw = null;
                 try {

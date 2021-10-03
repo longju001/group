@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxinkeji.comm.group.mapper.ShopMapper">
+
+
+
+    <insert id="applys" parameterType="com.jinxinkeji.comm.group.model.vo.ShopApplyVo">
+        insert into biz_shop_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">shop_name,</if>
+            <if test="shopAddress != null">shop_address,</if>
+            <if test="contactPersonName != null">contact_person_name,</if>
+            <if test="contactPersonPhone != null">contact_person_phone,</if>
+            <if test="fileUrl != null">file_url,</if>
+            shop_type
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">#{shopName},</if>
+            <if test="shopAddress != null">#{shopAddress},</if>
+            <if test="contactPersonName != null">#{contactPersonName},</if>
+            <if test="contactPersonPhone != null">#{contactPersonPhone},</if>
+            <if test="fileUrl != null">#{fileUrl},</if>
+            '01'
+         </trim>
+    </insert>
+
+</mapper>

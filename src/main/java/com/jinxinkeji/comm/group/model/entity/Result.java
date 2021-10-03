@@ -10,9 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class Result<T> {
 
-    @ApiModelProperty(value = "借口返回的消息描述")
-    private String message;
     @ApiModelProperty(value = "接口成功与否：true，false")
+    private String message;
+    @ApiModelProperty(value = "借口返回的消息描述")
     private String success;
     @ApiModelProperty(value = "接口返回的主体内容")
     private T result;
