@@ -13,26 +13,29 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class ProductForOrder {
 
-    @ApiModelProperty(value = "商品主键")
+    @ApiModelProperty(value = "货品主键")
     private Long id;
 
     @ApiModelProperty(value = "商家id")
     private Long shopId;
 
-    @ApiModelProperty(value = "商家id")
+    @ApiModelProperty(value = "商家名称")
     private String shopName;
 
     @ApiModelProperty(value = "商品表的商品ID")
     private Long goodsId;
 
-    @ApiModelProperty(value = "商品规格值列表，采用JSON数组格式")
+    @ApiModelProperty(value = "货品规格值，采用JSON数组格式")
     private String specifications;
 
-    @ApiModelProperty(value = "商品货品价格")
+    @ApiModelProperty(value = "货品货品价格")
     private BigDecimal price;
 
-    @ApiModelProperty(value = "商品货品图片")
+    @ApiModelProperty(value = "货品货品图片")
     private String url;
+
+    @ApiModelProperty(value = "商品数量")
+    private Long number;
 
     public Long getId() {
         return id;
@@ -88,5 +91,13 @@ public class ProductForOrder {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
     }
 }

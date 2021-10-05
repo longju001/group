@@ -67,11 +67,11 @@ public class AESUtil {
         //此处使用AES-128-ECB加密模式，key需要为16位。
         String cKey = "tokensaltforopen";
         // 需要加密的字串
-        String cSrc = "www.gowhere.so";
+        String cSrc = "openId";
         System.out.println(cSrc);
         // 加密
         String enString = AESUtil.Encrypt(cSrc, cKey);
-        System.out.println("加密后的字串是：" + enString);
+        System.out.println("加密后的字串是：" + enString);//ImRR+qsjWDidaYd1yEUdng==
 
         // 解密
         String DeString = AESUtil.Decrypt(enString, cKey);

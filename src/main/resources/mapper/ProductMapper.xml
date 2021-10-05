@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinxinkeji.comm.group.mapper.ProductMapper">
+
+    <resultMap type="com.jinxinkeji.comm.group.model.entity.MallGoods" id="MallGoodsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="keywords"    column="keywords"    />
+        <result property="brief"    column="brief"    />
+        <result property="isOnSale"    column="is_on_sale"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="isHot"    column="is_hot"    />
+        <result property="unit"    column="unit"    />
+        <result property="retailPrice"    column="retail_price"    />
+        <result property="detail"    column="detail"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectMallGoodsVo">
+        select id, name, shop_id, category_id, keywords, brief, is_on_sale, pic_url, is_hot, unit,
+               retail_price, detail, add_time, deleted from mall_goods
+    </sql>
+
+    <select id="getCategoryList" resultType="com.jinxinkeji.comm.group.model.entity.Category">
+        select id as id,category_name as categoryName,category_code as categoryCode,sort as sort from mall_category
+    </select>
+
+    <select id="selectGoodsPageVo" resultMap="MallGoodsResult">
+        <include refid="selectMallGoodsVo"/>
+        <where>
+            <if test="categoryId != null "> and category_id like concat('%', #{categoryId}, '%')</if>
+            <if test="keywords != null  and keywords != ''"> and keywords like concat('%', #{keywords}, '%')</if>
+        </where>
+        <choose>
+            <when test="sortType!=null and sortType == '01'">
+                order by retail_price asc
+            </when>
+            <when test="sortType!=null and sortType == '02'">
+                order by retail_price desc
+            </when>
+            <when test="sortType!=null and sortType == '03'">
+                order by sales_num asc
+            </when>
+            <when test="sortType!=null and sortType == '04'">
+                order by sales_num desc
+            </when>
+            <otherwise>
+
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getGoodsInfo" resultMap="MallGoodsResult">
+        <include refid="selectMallGoodsVo"/>
+        where id = #{goodsId}
+    </select>
+
+
+    <!--******************************************************************************************-->
+    <resultMap type="com.jinxinkeji.comm.group.model.entity.ProductForOrder" id="MallGoodsProductResult">
+        <result property="id"    column="id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="specifications"    column="specifications"    />
+        <result property="price"    column="price"    />
+        <result property="url"    column="url"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+    <sql id="selectMallGoodsProductVo">
+        select id, shop_id, goods_id, specifications, price, url, number from mall_goods_product
+    </sql>
+
+    <select id="getProductList" parameterType="list" resultMap="MallGoodsProductResult">
+        <include refid="selectMallGoodsProductVo"/>
+        where goods_id = #{goodsId}
+    </select>
+    <!--******************************************************************************************-->
+
+    <select id="goodsCommentListFirst" resultType="com.jinxinkeji.comm.group.model.entity.MallGoodsComment">
+        select
+               id as id,
+               open_id as openId,
+               head_url as headUrl,
+               name as name,
+               star as star,
+               content as content,
+               goods_id as goodsId,
+               add_time as addTime
+        where goods_id = #{goodsId}
+    </select>
+
+    <select id="goodsCommentListPageVo" resultType="com.jinxinkeji.comm.group.model.entity.MallGoodsComment">
+        select
+            id as id,
+            open_id as openId,
+            head_url as headUrl,
+            name as name,
+            star as star,
+            content as content,
+            goods_id as goodsId,
+            add_time as addTime
+        where goods_id = #{goodsId}
+    </select>
+
+
+    <insert id="addAddress">
+        insert into mall_user_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openId != null">openId,</if>
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="town != null">town,</if>
+            <if test="street != null">street,</if>
+            <if test="address != null">address,</if>
+            isDefault
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openId != null">#{openId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="town != null">#{town},</if>
+            <if test="street != null">#{street},</if>
+            <if test="address != null">#{address},</if>
+            #{isDefault}
+         </trim>
+    </insert>
+
+    <delete id="removeAddress" parameterType="long">
+        delete from mall_user_address where id = #{addressId}
+    </delete>
+
+    <update id="setDefault" parameterType="long">
+        update mall_user_address set isDefault = 1 where id = #{addressId}
+    </update>
+
+    <update id="setOtherNotDefault">
+        update mall_user_address set isDefault = 0 where id &lt;&gt; #{addressId} and openId = #{openId}
+    </update>
+
+    <update id="setNotDefault">
+        update mall_user_address set isDefault = 0 where id = #{addressId}
+    </update>
+
+</mapper>
