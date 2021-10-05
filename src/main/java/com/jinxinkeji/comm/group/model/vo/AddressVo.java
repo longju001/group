@@ -28,6 +28,9 @@ public class AddressVo {
     @ApiModelProperty(value = "区")
     private String town;
 
+    @ApiModelProperty(value = "街道")
+    private String street;
+
     @ApiModelProperty(value = "具体地址")
     private String address;
 
@@ -96,5 +99,13 @@ public class AddressVo {
 
     public void setIsDefault(int isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 }

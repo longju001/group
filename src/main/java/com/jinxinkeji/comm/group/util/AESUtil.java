@@ -63,11 +63,11 @@ public class AESUtil {
         }
     }
 
-    /*public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         //此处使用AES-128-ECB加密模式，key需要为16位。
         String cKey = "tokensaltforopen";
         // 需要加密的字串
-        String cSrc = "openId";
+        String cSrc = "{\"openId\":\"openId\"}";
         System.out.println(cSrc);
         // 加密
         String enString = AESUtil.Encrypt(cSrc, cKey);
@@ -76,5 +76,5 @@ public class AESUtil {
         // 解密
         String DeString = AESUtil.Decrypt(enString, cKey);
         System.out.println("解密后的字串是：" + DeString);
-    }*/
+    }
 }
