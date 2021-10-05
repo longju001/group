@@ -28,4 +28,6 @@ public interface IProductService {
     Result<String> setDefault(long addressId);
 
     Result<String> setNotDefault(long addressId);
+
+    Result<List<MallAddress>> addressList(String openId);
 }

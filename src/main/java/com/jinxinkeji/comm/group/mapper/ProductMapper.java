@@ -36,4 +36,6 @@ public interface ProductMapper {
     void setOtherNotDefault(long addressId, String openId);
 
     void setNotDefault(long addressId);
+
+    List<MallAddress> addressList(String openId);
 }

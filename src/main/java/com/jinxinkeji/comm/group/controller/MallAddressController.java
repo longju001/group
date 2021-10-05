@@ -1,6 +1,7 @@
 package com.jinxinkeji.comm.group.controller;
 
 import com.jinxinkeji.comm.group.config.UserThreadLocal;
+import com.jinxinkeji.comm.group.model.entity.MallAddress;
 import com.jinxinkeji.comm.group.model.entity.Result;
 import com.jinxinkeji.comm.group.model.entity.WechatUser;
 import com.jinxinkeji.comm.group.model.vo.AddressVo;
@@ -11,6 +12,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author changyl
@@ -23,6 +26,19 @@ public class MallAddressController {
 
     @Autowired
     private IProductService productService;
+
+    @CrossOrigin
+    @PostMapping("/list.json")
+    @ApiOperation(value = "查询我的收货地址", notes = "查询我的收货地址")
+    public Result<List<MallAddress>> addressList(){
+        try {
+            WechatUser user = UserThreadLocal.getUser();
+            return productService.addressList(user.getOpenId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failed("查询我的收货地址异常");
+        }
+    }
 
     @CrossOrigin
     @PostMapping("/addAddress.json")

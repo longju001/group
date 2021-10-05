@@ -151,4 +151,9 @@
         update mall_user_address set isDefault = 0 where id = #{addressId}
     </update>
 
+    <select id="addressList" resultType="com.jinxinkeji.comm.group.model.entity.MallAddress">
+        select id, openId, name, phone, province, city, town, street, address
+        from mall_user_address where openId = #{openId}
+    </select>
+
 </mapper>

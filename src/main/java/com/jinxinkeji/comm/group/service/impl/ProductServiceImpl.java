@@ -6,13 +6,11 @@ import com.jinxinkeji.comm.group.config.UserThreadLocal;
 import com.jinxinkeji.comm.group.mapper.ProductMapper;
 import com.jinxinkeji.comm.group.model.entity.*;
 import com.jinxinkeji.comm.group.model.vo.AddressVo;
-import com.jinxinkeji.comm.group.model.vo.MessageListVo;
 import com.jinxinkeji.comm.group.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author changyl
@@ -86,5 +84,10 @@ public class ProductServiceImpl implements IProductService {
     public Result<String> setNotDefault(long addressId) {
         productMapper.setNotDefault(addressId);
         return Result.success("成功", null);
+    }
+
+    @Override
+    public Result<List<MallAddress>> addressList(String openId) {
+        return Result.success("成功", productMapper.addressList(openId));
     }
 }
