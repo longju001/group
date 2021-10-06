@@ -19,25 +19,25 @@ public interface MessageMapper {
 
     IPage<MessageListVo> selectPageVo(Page<?> page, String themeCode);
 
-    List<MessageFile> getFilesByMessageIds(List<String> messageIdList);
+    List<MessageFile> getFilesByMessageIds(List<Long> messageIdList);
 
-    List<Map<String, String>> getCommentCounts(List<String> messageIdList);
+    List<Map<String, Object>> getCommentCounts(List<Long> messageIdList);
 
-    List<Map<String, String>> getThumbUpCounts(List<String> messageIdList, String currentOpenId);
+    List<Map<String, Object>> getThumbUpCounts(List<Long> messageIdList, String currentOpenId);
 
-    List<MessageComment> getCommentsByMessageIds(List<String> messageIdList);
+    List<MessageComment> getCommentsByMessageIds(List<Long> messageIdList);
 
-    List<MessageThumbUp> getThumbUpsByMessageIds(List<String> messageIdList);
+    List<MessageThumbUp> getThumbUpsByMessageIds(List<Long> messageIdList);
 
-    int publishMessage(CircleMessageVo vo);
+    long publishMessage(CircleMessageVo vo);
 
     int batchAddFiles(BatchFileVo vo);
 
-    void removeFilesByMessageId(String messageId);
+    void removeFilesByMessageId(Long messageId);
 
-    void removeCommentsByMessageId(String messageId);
+    void removeCommentsByMessageId(Long messageId);
 
-    void removeThumbUpsByMessageId(String messageId);
+    void removeThumbUpsByMessageId(Long messageId);
 
     void addThumbUp(ThumbUpVo vo);
 
@@ -45,15 +45,17 @@ public interface MessageMapper {
 
     int addComment(MessageCommentVo vo);
 
-    void removeMessageComment(String commentId);
+    void removeMessageComment(Long commentId);
 
-    void removeMessageByMessageId(String messageId);
+    void removeMessageByMessageId(Long messageId);
 
     List<MessageTheme> allTheme();
 
     List<Map<String, Object>> heatFlowOfTheme();
 
-    IPage<MessageComment> selectPageComment(Page<MessageComment> p, String messageId);
+    IPage<MessageComment> selectPageComment(Page<MessageComment> p, Long messageId);
 
-    List<CircleMessage> messageDetail(String messageId);
+    List<CircleMessage> messageDetail(Long messageId);
+
+    int getThumbCount(ThumbUpVo vo);
 }

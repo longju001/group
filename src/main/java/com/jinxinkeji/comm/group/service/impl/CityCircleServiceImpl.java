@@ -3,6 +3,7 @@ package com.jinxinkeji.comm.group.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
+import com.jinxinkeji.comm.group.config.UserThreadLocal;
 import com.jinxinkeji.comm.group.mapper.MessageMapper;
 import com.jinxinkeji.comm.group.model.entity.*;
 import com.jinxinkeji.comm.group.model.vo.*;
@@ -44,44 +45,44 @@ public class CityCircleServiceImpl implements ICityCircleService {
 
     private void getFiles(IPage<MessageListVo> iPage, String currentOpenId) {
         List<MessageListVo> messageList = iPage.getRecords();
-        List<String> messageIdList = messageList.stream().map(MessageListVo::getMessageId).collect(Collectors.toList());
+        List<Long> messageIdList = messageList.stream().map(MessageListVo::getMessageId).collect(Collectors.toList());
         if(messageIdList.isEmpty()){
             return;
         }
         List<MessageFile> fileList = messageMapper.getFilesByMessageIds(messageIdList);
-        List<Map<String, String>> commentCounts = messageMapper.getCommentCounts(messageIdList);
-        List<Map<String, String>> thumbUpCounts = messageMapper.getThumbUpCounts(messageIdList, null);
-        List<Map<String, String>> myThumbUpCounts = messageMapper.getThumbUpCounts(messageIdList, currentOpenId);
+        List<Map<String, Object>> commentCounts = messageMapper.getCommentCounts(messageIdList);
+        List<Map<String, Object>> thumbUpCounts = messageMapper.getThumbUpCounts(messageIdList, null);
+        List<Map<String, Object>> myThumbUpCounts = messageMapper.getThumbUpCounts(messageIdList, currentOpenId);
         for (MessageListVo circleMessage : messageList) {
             //处理文件
             List<MessageFile> files = new ArrayList<>();
             for (MessageFile messageFile : fileList) {
-                if(circleMessage.getMessageId().equals(messageFile.getMessageId())){
+                if(circleMessage.getMessageId() == messageFile.getMessageId()){
                     files.add(messageFile);
                 }
             }
             circleMessage.setFileList(files);
 
             //处理点赞数
-            for (Map<String, String> thumbUpCount : thumbUpCounts) {
-                if(circleMessage.getMessageId().equals(thumbUpCount.get("messageId"))){
-                    circleMessage.setThumbUpCount(Integer.parseInt(thumbUpCount.get("thumbupCount")));
+            for (Map<String, Object> thumbUpCount : thumbUpCounts) {
+                if(String.valueOf(circleMessage.getMessageId()).equals(String.valueOf(thumbUpCount.get("messageId")))){
+                    circleMessage.setThumbUpCount(((Long) thumbUpCount.get("thumbupCount")).intValue());
                     break;
                 }
             }
 
             //处理评论数
-            for (Map<String, String> commentCount : commentCounts) {
-                if(circleMessage.getMessageId().equals(String.valueOf(commentCount.get("messageId")))){
-                    circleMessage.setCommentCount(Integer.parseInt(commentCount.get("messagecomment")));
+            for (Map<String, Object> commentCount : commentCounts) {
+                if(String.valueOf(circleMessage.getMessageId()).equals(String.valueOf(commentCount.get("messageId")))){
+                    circleMessage.setCommentCount(((Long) commentCount.get("commentCount")).intValue());
                     break;
                 }
             }
 
             //处理当前登录人是不是点过赞
             boolean flag = false;
-            for (Map<String, String> myThumbUpCount : myThumbUpCounts) {
-                if(circleMessage.getMessageId().equals(String.valueOf(myThumbUpCount.get("messageId")))){
+            for (Map<String, Object> myThumbUpCount : myThumbUpCounts) {
+                if(String.valueOf(circleMessage.getMessageId()).equals(String.valueOf(myThumbUpCount.get("messageId")))){
                     flag = true;
                     break;
                 }
@@ -97,14 +98,14 @@ public class CityCircleServiceImpl implements ICityCircleService {
     @Override
     @Transactional
     public Result<String> publishMessage(CircleMessageVo vo) {
-        //vo.setMessageId(UUID.randomUUID().toString().replace("-", ""));
+        messageMapper.publishMessage(vo);
+        vo.setMessageId(vo.getMessageId());
         if(null!=vo.getFileIds() && vo.getFileIds().size()>0){
             BatchFileVo fileVos = new BatchFileVo();
             fileVos.setFileIds(vo.getFileIds());
             fileVos.setMessageId(vo.getMessageId());
             messageMapper.batchAddFiles(fileVos);
         }
-        messageMapper.publishMessage(vo);
         return Result.success("发布成功", null);
     }
 
@@ -119,7 +120,7 @@ public class CityCircleServiceImpl implements ICityCircleService {
     }*/
 
     @Override
-    public Result<String> removeMessage(String messageId) {
+    public Result<String> removeMessage(long messageId) {
         //删除同城消息 (删除文件，评论，赞)
         messageMapper.removeFilesByMessageId(messageId);
         messageMapper.removeCommentsByMessageId(messageId);
@@ -131,11 +132,15 @@ public class CityCircleServiceImpl implements ICityCircleService {
     @Override
     @Transactional
     public Result<String> messageThumbUp(ThumbUpVo vo) {
-        if(vo.getIsThumbUp() == 1){
+        WechatUser user = UserThreadLocal.getUser();
+        vo.setOpenId(user.getOpenId());
+        if(messageMapper.getThumbCount(vo)<=0 &&vo.getIsThumbUp()==1){
+            System.out.println("==========================================" + vo.getIsThumbUp());
             messageMapper.addThumbUp(vo);
             return Result.success("点赞成功", null);
         }
         if(vo.getIsThumbUp() == 0){
+            System.out.println("==========================================" + vo.getIsThumbUp());
             messageMapper.removeThumbUp(vo);
             return Result.success("取消赞成功", null);
         }
@@ -151,7 +156,7 @@ public class CityCircleServiceImpl implements ICityCircleService {
 
     @Override
     @Transactional
-    public Result<String> removeMessageComment(String commentId) {
+    public Result<String> removeMessageComment(long commentId) {
         messageMapper.removeMessageComment(commentId);
         return Result.success("删除评论成功", null);
     }
@@ -174,20 +179,20 @@ public class CityCircleServiceImpl implements ICityCircleService {
     }
 
     @Override
-    public Result<IPage<MessageComment>> queryMessageComment(long pageNum, String messageId) {
+    public Result<IPage<MessageComment>> queryMessageComment(long pageNum, long messageId) {
         Page<MessageComment> p = new Page<>(pageNum, commentPageSize);
         IPage<MessageComment> iPage = messageMapper.selectPageComment(p, messageId);
         return Result.success("查询评论成功", iPage);
     }
 
     @Override
-    public Result<CircleMessage> messageDetail(String messageId) {
+    public Result<CircleMessage> messageDetail(long messageId) {
         List<CircleMessage> list = messageMapper.messageDetail(messageId);
         if(list.isEmpty()){
             return Result.success("该消息已经不存在", null);
         }
         CircleMessage reMessage = list.get(0);
-        List<String> ids = Lists.newArrayList(messageId);
+        List<Long> ids = Lists.newArrayList(messageId);
         List<MessageFile> files = messageMapper.getFilesByMessageIds(ids);
         List<MessageComment> comments = messageMapper.getCommentsByMessageIds(ids);
         List<MessageThumbUp> thumbUps = messageMapper.getThumbUpsByMessageIds(ids);

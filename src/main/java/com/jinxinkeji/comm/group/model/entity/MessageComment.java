@@ -14,7 +14,7 @@ import java.util.Date;
 public class MessageComment {
 
     @ApiModelProperty(value = "评论ID")
-    private String commentId;
+    private long commentId;
     @ApiModelProperty(value = "所评论的消息ID")
     private String messageId;
     @ApiModelProperty(value = "评论人openId")
@@ -36,11 +36,11 @@ public class MessageComment {
         this.messageId = messageId;
     }
 
-    public String getCommentId() {
+    public long getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(String commentId) {
+    public void setCommentId(long commentId) {
         this.commentId = commentId;
     }
 

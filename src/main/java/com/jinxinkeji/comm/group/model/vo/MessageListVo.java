@@ -18,7 +18,7 @@ import java.util.List;
 public class MessageListVo {
 
     @ApiModelProperty(value = "消息ID")
-    private String messageId;
+    private Long messageId;
     @ApiModelProperty(value = "发消息的人的openId")
     private String openId;
     @ApiModelProperty(value = "发消息的人的头像")
@@ -56,11 +56,11 @@ public class MessageListVo {
         this.fileList = fileList;
     }
 
-    public String getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 

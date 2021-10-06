@@ -11,17 +11,17 @@ import io.swagger.annotations.ApiModelProperty;
 public class ThumbUpVo {
 
     @ApiModelProperty(value = "同城消息的ID")
-    private String messageId;
+    private long messageId;
     @ApiModelProperty(value = "点赞人的openId")
     private String openId;
     @ApiModelProperty(value = "1：点赞，0取消点赞")
     private int isThumbUp;
 
-    public String getMessageId() {
+    public long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(long messageId) {
         this.messageId = messageId;
     }
 

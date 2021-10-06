@@ -11,4 +11,8 @@ public interface IWeChatUserService {
 
 
     Result<String> addUser(WechatUser wechatUser) throws Exception;
+
+    Result<String> addTuan(String phone, String name);
+
+    Result<String> memoryUser(WechatUser user) throws Exception;
 }

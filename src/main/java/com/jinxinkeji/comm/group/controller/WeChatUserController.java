@@ -2,11 +2,14 @@ package com.jinxinkeji.comm.group.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.AES;
+import com.jinxinkeji.comm.group.config.UserThreadLocal;
 import com.jinxinkeji.comm.group.model.entity.Result;
 import com.jinxinkeji.comm.group.model.entity.WechatUser;
 import com.jinxinkeji.comm.group.model.vo.ProjectKeysVo;
 import com.jinxinkeji.comm.group.service.IWeChatUserService;
 import io.swagger.annotations.*;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
@@ -32,10 +35,12 @@ public class WeChatUserController {
 
     @CrossOrigin
     @PostMapping("/addUser.json")
-    @ApiImplicitParam(name = "wechatUser", value = "新增用户数据")
+    @ApiImplicitParam(name = "WechatUser", value = "新增用户数据")
     @ApiOperation(value = "添加用户", notes = "添加用户")
     public Result<String> addUser(@RequestBody WechatUser wechatUser){
         try {
+            WechatUser user = UserThreadLocal.getUser();
+            wechatUser.setOpenId(user.getOpenId());
             return weChatUserService.addUser(wechatUser);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +74,7 @@ public class WeChatUserController {
     })
     public Result<String> wxlogin(String code) {
         try {
+            //微信登录
             String token_url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + weixinAppID + "&secret=" +
                     weixinAppSecret + "&js_code=" + code + "&grant_type=authorization_code";
             String result = restTemplate.getForObject(token_url, String.class);
@@ -80,7 +86,7 @@ public class WeChatUserController {
                     String openId = jsonObject.getString("openid");
                     WechatUser user = new WechatUser();
                     user.setOpenId(openId);
-                    return weChatUserService.addUser(user);
+                    return weChatUserService.memoryUser(user);
                 }
             }
             return Result.failed("登录异常");
@@ -115,9 +121,19 @@ public class WeChatUserController {
 
 
     @CrossOrigin
-    @PostMapping("/aa.json")
-    public Result<String> aa(){
-        return Result.failed("添加新用户异常");
+    @PostMapping("/addTuan.json")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phone", value = "联系电话", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "name", value = "联系人姓名", required = true, dataType = "String")
+    })
+    @ApiOperation(value = "申请成为团长", notes = "申请成为团长")
+    public Result<String> addTuan(String phone, String name){
+        try {
+            return weChatUserService.addTuan(phone, name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failed("申请异常");
+        }
     }
 
 

@@ -53,4 +53,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * from wechatuser where openId = #{openId}
     </select>
 
+    <update id="addTuan" parameterType="string">
+        update wechatuser
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            role = 1,
+            payType = 0,
+            isPass = 0
+        </trim>
+        where openId = #{openId}
+    </update>
+
 </mapper>

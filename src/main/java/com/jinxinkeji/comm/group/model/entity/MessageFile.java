@@ -16,7 +16,7 @@ public class MessageFile {
     @ApiModelProperty(value = "点赞数据ID")
     private String fileId;
     @ApiModelProperty(value = "文件所属的同城圈消息")
-    private String messageId;
+    private long messageId;
     @ApiModelProperty(value = "上传时间")
     private Date uploadDate;
 
@@ -28,11 +28,11 @@ public class MessageFile {
         this.fileId = fileId;
     }
 
-    public String getMessageId() {
+    public long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(long messageId) {
         this.messageId = messageId;
     }
 

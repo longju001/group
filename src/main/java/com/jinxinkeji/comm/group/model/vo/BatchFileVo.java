@@ -15,7 +15,7 @@ public class BatchFileVo {
     @ApiModelProperty(value = "批量保存的文件的id集合")
     private List<String> fileIds;
     @ApiModelProperty(value = "文件所属的同城圈消息")
-    private String messageId;
+    private Long messageId;
 
     public List<String> getFileIds() {
         return fileIds;
@@ -25,11 +25,11 @@ public class BatchFileVo {
         this.fileIds = fileIds;
     }
 
-    public String getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 }

@@ -21,17 +21,17 @@ public interface ICityCircleService {
 
     //Result<String> addFiles(BatchFileVo vo);
 
-    Result<String> removeMessage(String messageId);
+    Result<String> removeMessage(long messageId);
 
     Result<String> messageThumbUp(ThumbUpVo vo);
 
     Result<String> messageComment(MessageCommentVo vo);
 
-    Result<String> removeMessageComment(String commentId);
+    Result<String> removeMessageComment(long commentId);
 
     Result<List<MessageTheme>> allTheme();
 
-    Result<IPage<MessageComment>> queryMessageComment(long pageNum, String messageId);
+    Result<IPage<MessageComment>> queryMessageComment(long pageNum, long messageId);
 
-    Result<CircleMessage> messageDetail(String messageId);
+    Result<CircleMessage> messageDetail(long messageId);
 }

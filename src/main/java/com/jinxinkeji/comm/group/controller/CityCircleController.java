@@ -48,10 +48,10 @@ public class CityCircleController {
     @CrossOrigin
     @PostMapping("/messageDetail.json")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "messageId", value = "同城圈消息ID", required = true, dataType = "String")
+            @ApiImplicitParam(name = "messageId", value = "同城圈消息ID", required = true, dataType = "long")
     })
     @ApiOperation(value = "同城圈动态详情", notes = "同城圈动态详情")
-    public Result<CircleMessage> messageDetail(String messageId){
+    public Result<CircleMessage> messageDetail(long messageId){
         try {
             return cityCircleService.messageDetail(messageId);
         } catch (Exception e) {
@@ -67,6 +67,8 @@ public class CityCircleController {
     @ApiOperation(value = "同城圈发布消息", notes = "同城圈发布消息")
     public Result<String> publish(@RequestBody CircleMessageVo circleMessageVo){
         try {
+            WechatUser user = UserThreadLocal.getUser();
+            circleMessageVo.setOpenId(user.getOpenId());
             return cityCircleService.publishMessage(circleMessageVo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,7 +93,7 @@ public class CityCircleController {
     @PostMapping("/removeMessage.json")
     @ApiImplicitParam(name = "messageId", value = "要删除的消息的ID")
     @ApiOperation(value = "删除同城圈消息", notes = "删除同城圈消息")
-    public Result<String> remove(String messageId){
+    public Result<String> remove(long messageId){
         try {
             return cityCircleService.removeMessage(messageId);
         } catch (Exception e) {
@@ -119,6 +121,8 @@ public class CityCircleController {
     @ApiOperation(value = "评论", notes = "评论")
     public Result<String> addComment(@RequestBody MessageCommentVo vo){
         try {
+            WechatUser user = UserThreadLocal.getUser();
+            vo.setOpenId(user.getOpenId());
             return cityCircleService.messageComment(vo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +134,7 @@ public class CityCircleController {
     @PostMapping("/removeMessageComment.json")
     @ApiImplicitParam(name = "commentId", value = "评论ID")
     @ApiOperation(value = "查询评论", notes = "删除评论")
-    public Result<String> removeComment(String commentId){
+    public Result<String> removeComment(long commentId){
         try {
             return cityCircleService.removeMessageComment(commentId);
         } catch (Exception e) {
@@ -144,10 +148,10 @@ public class CityCircleController {
     @ApiOperation(value = "查询动态的评论-分页查询", notes = "查询动态的评论-分页查询")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "pageNum", value = "分页的当前页数", required = true, dataType = "long"),
-            @ApiImplicitParam(name = "messageId", value = "用户标识", required = true, dataType = "String")
+            @ApiImplicitParam(name = "messageId", value = "用户标识", required = true, dataType = "long")
     })
     public Result<IPage<MessageComment>> queryMessageComment(@RequestParam("pageNum") long pageNum,
-                                                             @RequestParam("messageId") String messageId){
+                                                             @RequestParam("messageId") long messageId){
         try {
             return cityCircleService.queryMessageComment(pageNum, messageId);
         } catch (Exception e) {

@@ -13,7 +13,7 @@ import java.util.List;
 @ApiModel
 public class CircleMessageVo {
     @ApiModelProperty(value = "同城消息的ID,后端生成，前端不用填")
-    private String messageId;
+    private long messageId;
     @ApiModelProperty(value = "发布消息的用户openId")
     private String openId;
     @ApiModelProperty(value = "发布消息的主题")
@@ -87,11 +87,11 @@ public class CircleMessageVo {
         this.fileIds = fileIds;
     }
 
-    public String getMessageId() {
+    public long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(long messageId) {
         this.messageId = messageId;
     }
 }

@@ -52,10 +52,9 @@
         </foreach>
     </select>
 
-    <insert id="publishMessage" parameterType="com.jinxinkeji.comm.group.model.vo.CircleMessageVo">
+    <insert id="publishMessage" useGeneratedKeys="true" keyProperty="messageId" parameterType="com.jinxinkeji.comm.group.model.vo.CircleMessageVo">
         insert into circlemessage
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="messageId != null">messageId,</if>
             <if test="openId != null">openId,</if>
             <if test="title != null">title,</if>
             <if test="content != null">content,</if>
@@ -65,7 +64,6 @@
             publishDate
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="messageId != null">#{messageId},</if>
             <if test="openId != null">#{openId},</if>
             <if test="title != null">#{title},</if>
             <if test="content != null">#{content},</if>
@@ -79,9 +77,6 @@
     <select id="messageDetail" resultType="com.jinxinkeji.comm.group.model.entity.CircleMessage">
         select a.messageId, a.openId, b.headImageUrl, b.nickName, a.title, a.content, a.publishDate, a.themeCode, a.isUp, a.isHigtQualityMart
         from circlemessage a left join wechatuser b on a.openId = b.openId where a.messageId = #{messageId}
-    </select>
-    <select id="messageDeteil" resultType="com.jinxinkeji.comm.group.model.entity.CircleMessage">
-
     </select>
 
 
@@ -100,19 +95,19 @@
 		</foreach>
 	</insert>
 
-    <delete id="removeFilesByMessageId" parameterType="string">
+    <delete id="removeFilesByMessageId" parameterType="long">
         delete from messagefile where messageId = #{messageId}
     </delete>
 
-    <delete id="removeCommentsByMessageId" parameterType="string">
+    <delete id="removeCommentsByMessageId" parameterType="long">
         delete from messagecomment where messageId = #{messageId}
     </delete>
 
-    <delete id="removeThumbUpsByMessageId" parameterType="string">
+    <delete id="removeThumbUpsByMessageId" parameterType="long">
         delete from messagethumbup where messageId = #{messageId}
     </delete>
 
-    <delete id="removeMessageByMessageId" parameterType="string">
+    <delete id="removeMessageByMessageId" parameterType="long">
         delete from circlemessage where messageId = #{messageId}
     </delete>
 
@@ -131,14 +126,12 @@
     <insert id="addComment" parameterType="com.jinxinkeji.comm.group.model.vo.MessageCommentVo">
         insert into messagecomment
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            commentId,
             <if test="openId != null">openId,</if>
             <if test="messageId != null">messageId,</if>
             <if test="commentText != null">commentText,</if>
             commentDate
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            REPLACE(UUID(),"-",""),
             <if test="openId != null">#{openId},</if>
             <if test="messageId != null">#{messageId},</if>
             <if test="commentText != null">#{commentText},</if>
@@ -146,7 +139,7 @@
          </trim>
     </insert>
 
-    <delete id="removeMessageComment" parameterType="string">
+    <delete id="removeMessageComment" parameterType="long">
         delete from messagecomment where commentId = #{commentId}
     </delete>
 
@@ -162,6 +155,10 @@
         select a.commentId, a.messageId, a.openId, b.headImageUrl, b.nickName, a.commentText, a.commentDate
         from messagecomment a left join wechatuser b on a.openId = b.openId where a.messageId = #{messageId}
         order by commentDate desc
+    </select>
+
+    <select id="getThumbCount" resultType="java.lang.Integer">
+        select COUNT(1) as thumbupCount from messagethumbup where openId = #{openId} and messageId = #{messageId}
     </select>
 
 </mapper>

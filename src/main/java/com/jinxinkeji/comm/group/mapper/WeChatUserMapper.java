@@ -22,4 +22,6 @@ public interface WeChatUserMapper {
     void updateUser(WechatUser wechatUser);
 
     List<WechatUser> getUserByOpenId(String openId);
+
+    void addTuan(String openId, String phone, String name);
 }
