@@ -10,7 +10,7 @@
         <where>
             <if test="themeCode != null  and themeCode != ''"> and a.themeCode = #{themeCode}</if>
         </where>
-        order by a.publishDate desc
+        order by a.isUp, a.publishDate desc
     </select>
 
     <select id="getFilesByMessageIds" resultType="com.jinxinkeji.comm.group.model.entity.MessageFile" parameterType="list">

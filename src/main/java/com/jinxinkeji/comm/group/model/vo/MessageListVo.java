@@ -34,7 +34,7 @@ public class MessageListVo {
 
     @ApiModelProperty(value = "信息类别（美食，旅游，房产等）")
     private String themeCode;
-    @ApiModelProperty(value = "是否置顶")
+    @ApiModelProperty(value = "是否置顶0：不置顶  1：置顶")
     private int isUp;
     @ApiModelProperty(value = "是否优质商家")
     private int isHigtQualityMart;

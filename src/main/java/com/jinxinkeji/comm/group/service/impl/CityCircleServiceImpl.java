@@ -97,8 +97,8 @@ public class CityCircleServiceImpl implements ICityCircleService {
     @Override
     @Transactional
     public Result<String> publishMessage(CircleMessageVo vo) {
-        vo.setMessageId(UUID.randomUUID().toString().replace("-", ""));
-        if(vo.getFileIds().size()>0){
+        //vo.setMessageId(UUID.randomUUID().toString().replace("-", ""));
+        if(null!=vo.getFileIds() && vo.getFileIds().size()>0){
             BatchFileVo fileVos = new BatchFileVo();
             fileVos.setFileIds(vo.getFileIds());
             fileVos.setMessageId(vo.getMessageId());

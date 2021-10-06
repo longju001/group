@@ -46,18 +46,18 @@ public class WeChatUserController {
 
 
     @Value("${aliyun.oss.file.endpoint}")
-    private static String endpoint;
+    private String endpoint;
     @Value("${aliyun.oss.file.keyid}")
-    private static String keyId;
+    private String keyId;
     @Value("${aliyun.oss.file.keysecret}")
-    private static String keysecret;
+    private String keysecret;
     @Value("${aliyun.oss.file.bucketname}")
-    private static String bucketname;
+    private String bucketname;
 
     @Value("${weixinAppID}")
-    private static String weixinAppID;
+    private String weixinAppID;
     @Value("${weixinAppSecret}")
-    private static String weixinAppSecret;
+    private String weixinAppSecret;
 
     /**
      * 登陆接口
@@ -72,15 +72,14 @@ public class WeChatUserController {
             String token_url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + weixinAppID + "&secret=" +
                     weixinAppSecret + "&js_code=" + code + "&grant_type=authorization_code";
             String result = restTemplate.getForObject(token_url, String.class);
-            if(StringUtils.isEmpty(result)){
+            //result = "{\"session_key\":\"1DQHsEbcE0r1T6snVu9qIg==\",\"openid\":\"o7uR95B-YGKAQgretm1aiqZM3l9k\"}";
+            if(!StringUtils.isEmpty(result)){
                 result = new String(result.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
                 JSONObject jsonObject = JSON.parseObject(result);
-                if("0".equals(jsonObject.getString("errcode"))){
+                if(jsonObject.containsKey("openid")){
                     String openId = jsonObject.getString("openid");
-                    String unionid = jsonObject.getString("unionid");
                     WechatUser user = new WechatUser();
                     user.setOpenId(openId);
-                    user.setUnionid(unionid);
                     return weChatUserService.addUser(user);
                 }
             }

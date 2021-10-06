@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -67,7 +68,8 @@ public class PayController {
         paymentPo.setAppid(appid);
         paymentPo.setMch_id(mch_id);
         paymentPo.setNonce_str(nonce_str);
-        String newbody = new String(body.getBytes("ISO-8859-1"),"UTF-8");//以utf-8编码放入paymentPo，微信支付要求字符编码统一采用UTF-8字符编码
+        //以utf-8编码放入paymentPo，微信支付要求字符编码统一采用UTF-8字符编码
+        String newbody = new String(body.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
         paymentPo.setBody(newbody);
         paymentPo.setOut_trade_no(out_trade_no);
         paymentPo.setTotal_fee(total_fee);

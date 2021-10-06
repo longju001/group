@@ -12,4 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/serv")
 @Api(value = "服务", tags = "服务相关的接口", description = "服务相关的接口")
 public class ServController {
+
+
+
 }
